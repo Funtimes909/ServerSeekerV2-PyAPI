@@ -14,4 +14,4 @@ def stats():
         count: int
     cur = conn.cursor(row_factory=class_row(Stats))
     stats = cur.execute("SELECT COUNT(*) FROM servers").fetchone()
-    return {"ServerNumber":f"{stats.count}"}
+    return {"servers":f"{stats.count}"}
