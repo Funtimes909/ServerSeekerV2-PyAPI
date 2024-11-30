@@ -1,12 +1,14 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from os import getenv
 from pydantic import BaseModel
 from psycopg.rows import class_row
 import psycopg
+load_dotenv()
 
 app = FastAPI()
 
-conn = psycopg.connect("dbname=test user=fastapi password=nucceteere host=localhost")
+conn = psycopg.connect(f"dbname={getenv("DBNAME")} user={getenv("USERNAME")} password={getenv("PASSWORD")} host={getenv("HOST")}")
 
 @app.get("/stats")
 def stats():
