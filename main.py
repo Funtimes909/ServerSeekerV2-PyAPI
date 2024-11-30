@@ -8,8 +8,11 @@ load_dotenv()
 
 app = FastAPI()
 
-conn = psycopg.connect(f"dbname={getenv("DBNAME")} user={getenv("USERNAME")} password={getenv("PASSWORD")} host={getenv("HOST")}")
-
+try:
+    conn = psycopg.connect(f"dbname={getenv("DBNAME")} user={getenv("USERNAME")} password={getenv("PASSWORD")} host={getenv("HOST")} port={getenv("PORT")}")
+except:
+    raise ConnectionError("Database can't be reached!")
+    
 @app.get("/stats")
 def stats():
     class Stats(BaseModel):
