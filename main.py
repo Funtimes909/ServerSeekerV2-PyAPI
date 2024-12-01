@@ -57,8 +57,8 @@ def PlayerHistory(player: str = None, address: str = None):
         for i in range(length):
             i = i + 1
             if JsonOutput == None:
-                JsonOutput = output(length - 1)
+                JsonOutput = [output(length - 1),]
             elif JsonOutput != None:
-                JsonOutput = JsonOutput.update(output(length - 1))
+                JsonOutput = JsonOutput.append(output(length - 1))
         return JsonOutput
     
