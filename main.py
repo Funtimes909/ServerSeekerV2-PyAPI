@@ -28,36 +28,34 @@ def stats():
 @app.get("/history")
 def PlayerHistory(player: str = None, address: str = None):
     cur = conn.cursor(row_factory=class_row(models.History))
-    if player != None and address != None:
+    if player and address:
         raise HTTPException(status_code=400, detail="You can't use both player and address!")
-    elif player == None and address == None:
+    elif not player and not address:
         raise HTTPException(status_code=400, detail="You have to provide either an address or a player!")
-    elif player != None and address == None:
+    elif player and not address:
         history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playername = '{player}' ORDER BY lastseen DESC", prepare=True).fetchall()
         def output(serverId):
-            return {"address":f"{history[serverId].address}","playername":f"{history[serverId].playername}","playeruuid":f"{history[serverId].playeruuid}","lastseen":f"{history[serverId].lastseen}"}
+            server = history[serverId]
+            return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid, "lastseen": server.lastseen}
         length = len(history)
-        i = 0
-        JsonOutput = None
+        JsonOutput = []
         for i in range(length):
-            i = i + 1
-            if JsonOutput == None:
-                JsonOutput = output(length - 1)
-            elif JsonOutput != None:
-                JsonOutput = JsonOutput,output(length - 1)
+            if not JsonOutput:
+                JsonOutput = [output(i)]
+            elif JsonOutput:
+                JsonOutput.append(output(i))
         return JsonOutput
-    elif player == None and address != None:
+    elif not player and address:
         history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = '{address}' ORDER BY lastseen DESC", prepare=True).fetchall()
         def output(serverId):
-            return {"address":f"{history[serverId].address}","playername":f"{history[serverId].playername}","playeruuid":f"{history[serverId].playeruuid}","lastseen":f"{history[serverId].lastseen}"}
+            server = history[serverId]
+            return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid, "lastseen": server.lastseen}
         length = len(history)
-        i = 0
-        JsonOutput = None
+        JsonOutput = []
         for i in range(length):
-            i = i + 1
-            if JsonOutput == None:
-                JsonOutput = output(length - 1)
-            elif JsonOutput != None:
-                JsonOutput = JsonOutput,output(length - 1)
+            if not JsonOutput:
+                JsonOutput = [output(i)]
+            elif JsonOutput:
+                JsonOutput.append(output(i))
         return JsonOutput
     
