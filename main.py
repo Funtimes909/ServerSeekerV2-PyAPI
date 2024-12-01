@@ -38,13 +38,13 @@ def PlayerHistory(player: str = None, address: str = None):
             return {"address":f"{history[serverId].address}","playername":f"{history[serverId].playername}","playeruuid":f"{history[serverId].playeruuid}","lastseen":f"{history[serverId].lastseen}"}
         length = len(history)
         i = 0
-        JsonOutput = None
+        JsonOutput = []
         for i in range(length):
             i = i + 1
-            if JsonOutput == None:
-                JsonOutput = output(length - 1)
-            elif JsonOutput != None:
-                JsonOutput = JsonOutput,output(length - 1)
+            if not JsonOutput:
+                JsonOutput = [output(length - 1),]
+            elif JsonOutput:
+                JsonOutput = JsonOutput.append(output(length - 1))
         return JsonOutput
     elif not player and address:
         history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = '{address}' ORDER BY lastseen DESC", prepare=True).fetchall()
