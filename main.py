@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import models
 from os import getenv
 from pydantic import BaseModel
@@ -28,8 +28,8 @@ def stats():
 @app.get("/history")
 def PlayerHistory(player: str = None, address: str = None):
     if player != None and address != None:
-        return {"details":"You can't use both player and address!"}
+        raise HTTPException(status_code=400, detail="You can't use both player and address!")
     elif player == None and address == None:
-        return {"details":"You have to provide either an address or a player!"}
+        raise HTTPException(status_code=400, detail="You have to provide either an address or a player!")
     cur = conn.cursor()
     history = cur.execute(prepare=True)
