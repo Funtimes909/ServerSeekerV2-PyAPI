@@ -41,9 +41,9 @@ def PlayerHistory(player: str = None, address: str = None):
         JsonOutput = []
         for i in range(length):
             if not JsonOutput:
-                JsonOutput = [output(length - 1)]
+                JsonOutput = [output(i)]
             elif JsonOutput:
-                JsonOutput = JsonOutput.append(output(length - 1))
+                JsonOutput = JsonOutput.append(output(i))
         return JsonOutput
     elif not player and address:
         history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = '{address}' ORDER BY lastseen DESC", prepare=True).fetchall()
@@ -54,8 +54,8 @@ def PlayerHistory(player: str = None, address: str = None):
         JsonOutput = []
         for i in range(length):
             if not JsonOutput:
-                JsonOutput = [output(length - 1)]
+                JsonOutput = [output(i)]
             elif JsonOutput:
-                JsonOutput = JsonOutput.append(output(length - 1))
+                JsonOutput = JsonOutput.append(output(i))
         return JsonOutput
     
