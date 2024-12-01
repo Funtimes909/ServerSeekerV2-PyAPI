@@ -24,3 +24,12 @@ def stats():
 # def random():
 #     cur = conn.cursor()
 #     random = cur.execute("SELECT * FROM servers LEFT JOIN playerhistory ON servers.address = playerhistory.address AND servers.port = playerhistory.port LEFT JOIN mods ON servers.address = mods.address AND servers.port = mods.port ORDER BY RANDOM() LIMIT 1").fetchone()
+
+@app.get("/history")
+def PlayerHistory(player: str = None, address: str = None):
+    if player != None and address != None:
+        return {"details":"You can't use both player and address!"}
+    elif player == None and address == None:
+        return {"details":"You have to provide either an address or a player!"}
+    cur = conn.cursor()
+    history = cur.execute(prepare=True)
