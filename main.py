@@ -34,12 +34,30 @@ def PlayerHistory(player: str = None, address: str = None):
         raise HTTPException(status_code=400, detail="You have to provide either an address or a player!")
     elif player != None and address == None:
         history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playername = '{player}' ORDER BY lastseen DESC", prepare=True).fetchall()
+        def output(serverId):
+            return {"address":f"{history[serverId].address}","playername":f"{history[serverId].playername}","playeruuid":f"{history[serverId].playeruuid}","lastseen":f"{history[serverId].lastseen}"}
+        length = len(history)
+        i = 0
+        JsonOutput = None
+        for i in range(length):
+            i = i + 1
+            if JsonOutput == None:
+                JsonOutput = output(length - 1)
+            elif JsonOutput != None:
+                JsonOutput = JsonOutput,output(length - 1)
+        return JsonOutput
     elif player == None and address != None:
         history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = '{address}' ORDER BY lastseen DESC", prepare=True).fetchall()
-        return {
-                "address":f"{history[0].address}",
-                "playername":f"{history[0].playername}",
-                "playeruuid":f"{history[0].playeruuid}",
-                "lastseen":f"{history[0].lastseen}"
-            }
+        def output(serverId):
+            return {"address":f"{history[serverId].address}","playername":f"{history[serverId].playername}","playeruuid":f"{history[serverId].playeruuid}","lastseen":f"{history[serverId].lastseen}"}
+        length = len(history)
+        i = 0
+        JsonOutput = None
+        for i in range(length):
+            i = i + 1
+            if JsonOutput == None:
+                JsonOutput = output(length - 1)
+            elif JsonOutput != None:
+                JsonOutput = JsonOutput,output(length - 1)
+        return JsonOutput
     
