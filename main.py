@@ -40,7 +40,6 @@ def PlayerHistory(player: str = None, address: str = None):
         i = 0
         JsonOutput = []
         for i in range(length):
-            i = i + 1
             if not JsonOutput:
                 JsonOutput = [output(length - 1),]
             elif JsonOutput:
@@ -55,7 +54,6 @@ def PlayerHistory(player: str = None, address: str = None):
         i = 0
         JsonOutput = []
         for i in range(length):
-            i = i + 1
             if not JsonOutput:
                 JsonOutput = [output(length - 1),]
             elif JsonOutput:
