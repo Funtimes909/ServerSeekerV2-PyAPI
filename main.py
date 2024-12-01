@@ -33,7 +33,7 @@ def PlayerHistory(player: str = None, address: str = None):
     elif not player and not address:
         raise HTTPException(status_code=400, detail="You have to provide either an address or a player!")
     elif player and not address:
-        history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playername = '{player}' ORDER BY lastseen DESC", prepare=True).fetchall()
+        history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playername = %s ORDER BY lastseen DESC", (player, ), prepare=True).fetchall()
         def output(serverId):
             server = history[serverId]
             return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid, "lastseen": server.lastseen}
@@ -46,7 +46,7 @@ def PlayerHistory(player: str = None, address: str = None):
                 JsonOutput.append(output(i))
         return JsonOutput
     elif not player and address:
-        history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = '{address}' ORDER BY lastseen DESC", prepare=True).fetchall()
+        history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = %s ORDER BY lastseen DESC", (address, ), prepare=True).fetchall()
         def output(serverId):
             server = history[serverId]
             return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid, "lastseen": server.lastseen}
