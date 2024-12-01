@@ -49,7 +49,8 @@ def PlayerHistory(player: str = None, address: str = None):
     elif player == None and address != None:
         history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = '{address}' ORDER BY lastseen DESC", prepare=True).fetchall()
         def output(serverId):
-            return {"address":f"{history[serverId].address}","playername":f"{history[serverId].playername}","playeruuid":f"{history[serverId].playeruuid}","lastseen":f"{history[serverId].lastseen}"}
+            server = history[serverId]
+            return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid, "lastseen": server.lastseen}
         length = len(history)
         i = 0
         JsonOutput = None
@@ -58,6 +59,6 @@ def PlayerHistory(player: str = None, address: str = None):
             if JsonOutput == None:
                 JsonOutput = output(length - 1)
             elif JsonOutput != None:
-                JsonOutput = JsonOutput,output(length - 1)
+                JsonOutput = JsonOutput.update(output(length - 1))
         return JsonOutput
     
