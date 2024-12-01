@@ -43,7 +43,7 @@ def PlayerHistory(player: str = None, address: str = None):
             if not JsonOutput:
                 JsonOutput = [output(i)]
             elif JsonOutput:
-                JsonOutput = JsonOutput.append(output(i))
+                JsonOutput.append(output(i))
         return JsonOutput
     elif not player and address:
         history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = '{address}' ORDER BY lastseen DESC", prepare=True).fetchall()
@@ -56,6 +56,6 @@ def PlayerHistory(player: str = None, address: str = None):
             if not JsonOutput:
                 JsonOutput = [output(i)]
             elif JsonOutput:
-                JsonOutput = JsonOutput.append(output(i))
+                JsonOutput.append(output(i))
         return JsonOutput
     
