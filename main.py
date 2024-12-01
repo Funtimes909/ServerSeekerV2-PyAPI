@@ -27,9 +27,19 @@ def stats():
 
 @app.get("/history")
 def PlayerHistory(player: str = None, address: str = None):
+    cur = conn.cursor(row_factory=class_row(models.History))
     if player != None and address != None:
         raise HTTPException(status_code=400, detail="You can't use both player and address!")
     elif player == None and address == None:
         raise HTTPException(status_code=400, detail="You have to provide either an address or a player!")
-    cur = conn.cursor()
-    history = cur.execute(prepare=True)
+    elif player != None and address == None:
+        history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playername = '{player}' ORDER BY lastseen DESC", prepare=True).fetchall()
+    elif player == None and address != None:
+        history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = '{address}' ORDER BY lastseen DESC", prepare=True).fetchall()
+        return {
+                "address":f"{history[0].address}",
+                "playername":f"{history[0].playername}",
+                "playeruuid":f"{history[0].playeruuid}",
+                "lastseen":f"{history[0].lastseen}"
+            }
+    
