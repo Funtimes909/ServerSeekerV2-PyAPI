@@ -67,3 +67,6 @@ The server runs on port 8000.
 ```bash
 fastapi run
 ```
+
+## Contributors
+@CuriousCodingCanadian for bug fixes and improved docs
