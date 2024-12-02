@@ -1,6 +1,5 @@
 # ServerSeekerV2 Python API
-ServerSeekerV2 API
-Created with FastAPI
+ServerSeekerV2 API written in Python using FastAPI
 
 ## Requirements
 
@@ -15,14 +14,14 @@ git clone https://github.com/Funtimes909/ServerSeekerV2-PyAPI
 ```
 ### Installing dependencies
 The ServerSeekerV2 API depends on PostgreSQL and several Python libraries. These need to be installed to run the ServerSeekerV2 API.
-
-Install Python requirements with pip
+  
+#### Install Python requirements with pip
 ```bash
 python -m venv env
 ./env/bin/pip install -r ./requirements
 ```
 
-Install PostgreSQL
+#### Install PostgreSQL
 Debian (and derivatives):
 
 ```bash
@@ -33,6 +32,20 @@ Arch (and derivatives):
 
 ```bash
 sudo pacman -S postgresql
+```
+
+#### Install Git:
+
+Ubuntu/Debian:
+
+```bash
+sudo apt-get install git
+```
+
+Arch:
+
+```bash
+sudo pacman -S git
 ```
 
 ## Running
@@ -46,10 +59,10 @@ fastapi dev
 
 ### Production
 
-The production server should not be used alone.
+The production server should not be used alone.  
 When deploying, a reverse proxy with a webserver like Apache, Nginx or Caddy should be used.  
-You should also deny connections to port 8000 from outside the network.
-The server runs on port 8000.
+You should also deny connections to port 8000 from outside the network.  
+The server runs on port 8000.  
 
 ```bash
 fastapi run
