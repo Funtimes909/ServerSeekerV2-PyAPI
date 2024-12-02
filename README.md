@@ -68,5 +68,5 @@ The server runs on port 8000.
 fastapi run
 ```
 
-## Contributors
-@CuriousCodingCanadian for bug fixes and improved docs
+## Special Thanks
+- [@CuriousCodingCanadian](https://github.com/CuriousCodingCanadian) for bug fixes and improved docs
