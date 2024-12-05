@@ -8,3 +8,6 @@ class History(BaseModel):
     playername: str
     playeruuid: str
     lastseen: int
+
+class Key(BaseModel):
+    apikey: str

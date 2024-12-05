@@ -1,9 +1,11 @@
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
 import models
 from os import getenv
+from key_check import check
 import responses
 import subprocess
+from typing import Annotated
 from psycopg.rows import class_row
 import psycopg
 load_dotenv()
@@ -36,7 +38,15 @@ try:
     conn = psycopg.connect(f"dbname={getenv("DBNAME")} user={getenv("USERNAME")} password={getenv("PASSWORD")} host={getenv("HOST")} port={getenv("PORT")}")
 except:
     raise ConnectionRefusedError("Database can't be reached!")
-    
+
+gcur = conn.cursor(row_factory=class_row(models.Key))
+keyTable = "CREATE TABLE IF NOT EXISTS api_keys (ID int NOT NULL, APIKey varchar(255) NOT NULL UNIQUE, PRIMARY KEY (ID))"
+gcur.execute(keyTable)
+conn.commit()
+
+keyQuery = gcur.execute("SELECT APIKey FROM api_keys").fetchall()
+keys = check(keyQuery)
+
 @app.get("/stats", responses=responses.stats, operation_id="stats")
 def Stats():
     """
@@ -52,7 +62,7 @@ def Stats():
 #     random = cur.execute("SELECT * FROM servers LEFT JOIN playerhistory ON servers.address = playerhistory.address AND servers.port = playerhistory.port LEFT JOIN mods ON servers.address = mods.address AND servers.port = mods.port ORDER BY RANDOM() LIMIT 1").fetchone()
 
 @app.get("/history", responses=responses.history, operation_id="history")
-def History(player: str = None, address: str = None):
+def History(player: str = None, address: str = None, x_auth_key: Annotated[str | None, Header()] = None):
     """
     Get the history of a player/server.
     - **player**: The player name you want to see history for. Incompatible with address.
@@ -61,6 +71,10 @@ def History(player: str = None, address: str = None):
     :param player: Player name to search history for
     :param address: Address to search history for
     """
+    if not x_auth_key:
+        raise HTTPException(status_code=401)
+    elif x_auth_key not in keys:
+        raise HTTPException(status_code=401)
     cur = conn.cursor(row_factory=class_row(models.History))
     if player and address:
         raise HTTPException(status_code=422, detail="You can't use both player and address!")
