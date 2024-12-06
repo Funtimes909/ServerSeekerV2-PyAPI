@@ -38,6 +38,21 @@ history = {
       }
      }
      , "description": "Unprocessable Content"
+    },
+
+    401: 
+    {
+     "content": 
+     {
+      "application/json": 
+      {
+        "example": 
+       {
+        "detail": "Unauthorized"
+       }
+      }
+     }
+     , "description": "Unauthorized"
     }
 }
 
