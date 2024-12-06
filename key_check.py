@@ -9,4 +9,4 @@ def check(keys):
             ListOutput = [output(i)]
         elif ListOutput:
             ListOutput.append(output(i))
-        return ListOutput
+    return ListOutput

@@ -70,6 +70,7 @@ def History(player: str = None, address: str = None, x_auth_key: Annotated[str |
     \f
     :param player: Player name to search history for
     :param address: Address to search history for
+    :param X-Auth-Key: The api token to identify yourself or your application 
     """
     if not x_auth_key:
         raise HTTPException(status_code=401)
