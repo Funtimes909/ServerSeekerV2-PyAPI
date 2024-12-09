@@ -51,12 +51,23 @@ conn.commit()
 keyQuery = gcur.execute("SELECT APIKey FROM api_keys").fetchall()
 keys = check(keyQuery)
 
+@app.get("/stats", responses=responses.stats, operation_id="stats")
+def stats():
+    """
+    Get the stats for ServerSeekerV2
+    """
+    cur = conn.cursor(row_factory=class_row(models.Stats))
+    stats = cur.execute("SELECT COUNT(*) FROM servers").fetchone()
+    return {"servers":f"{stats.count}"}
+
 @app.get("/history", responses=responses.history, operation_id="history")
 def history(player: str = None, address: str = None, offset: int = None, x_auth_key: Annotated[str | None, Header()] = None):
     """
     Get the history of a player or server.
     - **player**: The player name you want to see history for. Incompatible with address.
     - **address**: The address you want to see history for. Incompatible with player.
+    - **offset**: Offset from where to start the sear
+    \f
     :param player: Player name to search history for.
     :param address: Address to search history for.
     :param offset: Offset from where to start the search.
@@ -68,14 +79,14 @@ def history(player: str = None, address: str = None, offset: int = None, x_auth_
     if player and address:
         raise HTTPException(status_code=422, detail="You can't use both player and address!")
     elif not player and not address:
-        raise HTTPException(status_code=422, detail="You have to provide either an address or a player!")
+        raise HTTPException(status_code=400, detail="You have to provide either an address or a player!")
 
     cur = conn.cursor(row_factory=class_row(models.History))
 
     if player:
         option = player
         query = f"SELECT * FROM playerhistory WHERE playername = %s ORDER BY lastseen DESC LIMIT 100 OFFSET %s"
-    else:
+    elif address:
         option = address
         query = f"SELECT * FROM playerhistory WHERE address = %s ORDER BY lastseen DESC LIMIT 100 OFFSET %s"
 
@@ -95,15 +106,6 @@ def history(player: str = None, address: str = None, offset: int = None, x_auth_
         elif json_output:
             json_output.append(output(i))
     return json_output
-
-@app.get("/stats", responses=responses.stats, operation_id="stats")
-def stats():
-    """
-    Get the stats for ServerSeekerV2
-    """
-    cur = conn.cursor(row_factory=class_row(models.Stats))
-    stats = cur.execute("SELECT COUNT(*) FROM servers").fetchone()
-    return {"servers":f"{stats.count}"}
 
 # @app.get("/random")
 # def random():
