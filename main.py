@@ -1,12 +1,12 @@
+from typing import Annotated
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
-import models
 from os import getenv
 from key_check import check
+from psycopg.rows import class_row
+import models
 import responses
 import subprocess
-from typing import Annotated
-from psycopg.rows import class_row
 import psycopg
 load_dotenv()
 
@@ -40,15 +40,64 @@ except:
     raise ConnectionRefusedError("Database can't be reached!")
 
 gcur = conn.cursor(row_factory=class_row(models.Key))
-keyTable = "CREATE TABLE IF NOT EXISTS api_keys (ID int NOT NULL, APIKey varchar(255) NOT NULL UNIQUE, PRIMARY KEY (ID))"
+keyTable = ("CREATE TABLE IF NOT EXISTS api_keys ("
+            "ID int,"
+            "APIKey varchar(255) NOT NULL UNIQUE,"
+            "PRIMARY KEY (ID))")
+
 gcur.execute(keyTable)
 conn.commit()
 
 keyQuery = gcur.execute("SELECT APIKey FROM api_keys").fetchall()
 keys = check(keyQuery)
 
+@app.get("/history", responses=responses.history, operation_id="history")
+def history(player: str = None, address: str = None, x_auth_key: Annotated[str | None, Header()] = None):
+    """
+    Get the history of a player/server.
+    - **player**: The player name you want to see history for. Incompatible with address.
+    - **address**: The address you want to see history for. Incompatible with player.
+    :param player: Player name to search history for
+    :param address: Address to search history for
+    :param X-Auth-Key: The api token to identify yourself or your application
+    """
+
+    if not x_auth_key or x_auth_key not in keys:
+        raise HTTPException(status_code=401)
+    if player and address:
+        raise HTTPException(status_code=422, detail="You can't use both player and address!")
+    elif not player and not address:
+        raise HTTPException(status_code=422, detail="You have to provide either an address or a player!")
+
+    cur = conn.cursor(row_factory=class_row(models.History))
+    query: str
+
+    if player:
+        query = f"SELECT * FROM playerhistory WHERE playername = %s"
+    else:
+        query = f"SELECT * FROM playerhistory WHERE playerhistory.address = %s"
+
+
+    if player and not address:
+        playerhistory = cur.execute(query, (player,), prepare=True).fetchall()
+        print(query)
+
+        def output(serverid):
+            server = playerhistory[serverid]
+            return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid,
+                    "lastseen": server.lastseen}
+
+        length = len(playerhistory)
+        json_output = []
+        for i in range(length):
+            if not json_output:
+                json_output = [output(i)]
+            elif json_output:
+                json_output.append(output(i))
+        return json_output
+
 @app.get("/stats", responses=responses.stats, operation_id="stats")
-def Stats():
+def stats():
     """
     Get the stats for ServerSeekerV2
     """
@@ -60,51 +109,3 @@ def Stats():
 # def random():
 #     cur = conn.cursor()
 #     random = cur.execute("SELECT * FROM servers LEFT JOIN playerhistory ON servers.address = playerhistory.address AND servers.port = playerhistory.port LEFT JOIN mods ON servers.address = mods.address AND servers.port = mods.port ORDER BY RANDOM() LIMIT 1").fetchone()
-
-@app.get("/history", responses=responses.history, operation_id="history")
-def History(player: str = None, address: str = None, x_auth_key: Annotated[str | None, Header()] = None):
-    """
-    Get the history of a player/server.
-    - **player**: The player name you want to see history for. Incompatible with address.
-    - **address**: The address you want to see history for. Incompatible with player.
-    \f
-    :param player: Player name to search history for
-    :param address: Address to search history for
-    :param X-Auth-Key: The api token to identify yourself or your application 
-    """
-    if not x_auth_key:
-        raise HTTPException(status_code=401)
-    elif x_auth_key not in keys:
-        raise HTTPException(status_code=401)
-    cur = conn.cursor(row_factory=class_row(models.History))
-    if player and address:
-        raise HTTPException(status_code=422, detail="You can't use both player and address!")
-    elif not player and not address:
-        raise HTTPException(status_code=422, detail="You have to provide either an address or a player!")
-    elif player and not address:
-        history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playername = %s ORDER BY lastseen DESC", (player, ), prepare=True).fetchall()
-        def output(serverId):
-            server = history[serverId]
-            return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid, "lastseen": server.lastseen}
-        length = len(history)
-        JsonOutput = []
-        for i in range(length):
-            if not JsonOutput:
-                JsonOutput = [output(i)]
-            elif JsonOutput:
-                JsonOutput.append(output(i))
-        return JsonOutput
-    elif not player and address:
-        history = cur.execute(f"SELECT address, playername, playeruuid, lastseen FROM playerhistory WHERE playerhistory.address = %s ORDER BY lastseen DESC", (address, ), prepare=True).fetchall()
-        def output(serverId):
-            server = history[serverId]
-            return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid, "lastseen": server.lastseen}
-        length = len(history)
-        JsonOutput = []
-        for i in range(length):
-            if not JsonOutput:
-                JsonOutput = [output(i)]
-            elif JsonOutput:
-                JsonOutput.append(output(i))
-        return JsonOutput
-    
