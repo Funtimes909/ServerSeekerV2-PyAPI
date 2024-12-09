@@ -52,14 +52,15 @@ keyQuery = gcur.execute("SELECT APIKey FROM api_keys").fetchall()
 keys = check(keyQuery)
 
 @app.get("/history", responses=responses.history, operation_id="history")
-def history(player: str = None, address: str = None, x_auth_key: Annotated[str | None, Header()] = None):
+def history(player: str = None, address: str = None, offset: int = None, x_auth_key: Annotated[str | None, Header()] = None):
     """
-    Get the history of a player/server.
+    Get the history of a player or server.
     - **player**: The player name you want to see history for. Incompatible with address.
     - **address**: The address you want to see history for. Incompatible with player.
-    :param player: Player name to search history for
-    :param address: Address to search history for
-    :param X-Auth-Key: The api token to identify yourself or your application
+    :param player: Player name to search history for.
+    :param address: Address to search history for.
+    :param offset: Offset from where to start the search.
+    :param X-Auth-Key: The api token to identify yourself or your application.
     """
 
     if not x_auth_key or x_auth_key not in keys:
@@ -70,31 +71,30 @@ def history(player: str = None, address: str = None, x_auth_key: Annotated[str |
         raise HTTPException(status_code=422, detail="You have to provide either an address or a player!")
 
     cur = conn.cursor(row_factory=class_row(models.History))
-    query: str
 
     if player:
-        query = f"SELECT * FROM playerhistory WHERE playername = %s"
+        option = player
+        query = f"SELECT * FROM playerhistory WHERE playername = %s ORDER BY lastseen DESC LIMIT 100 OFFSET %s"
     else:
-        query = f"SELECT * FROM playerhistory WHERE playerhistory.address = %s"
+        option = address
+        query = f"SELECT * FROM playerhistory WHERE address = %s ORDER BY lastseen DESC LIMIT 100 OFFSET %s"
 
+    playerhistory = cur.execute(query, (option,offset), prepare=True).fetchall()
 
-    if player and not address:
-        playerhistory = cur.execute(query, (player,), prepare=True).fetchall()
-        print(query)
+    def output(serverid):
+        server = playerhistory[serverid]
+        return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid,
+                "lastseen": server.lastseen}
 
-        def output(serverid):
-            server = playerhistory[serverid]
-            return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid,
-                    "lastseen": server.lastseen}
+    length = len(playerhistory)
+    json_output = []
 
-        length = len(playerhistory)
-        json_output = []
-        for i in range(length):
-            if not json_output:
-                json_output = [output(i)]
-            elif json_output:
-                json_output.append(output(i))
-        return json_output
+    for i in range(length):
+        if not json_output:
+            json_output = [output(i)]
+        elif json_output:
+            json_output.append(output(i))
+    return json_output
 
 @app.get("/stats", responses=responses.stats, operation_id="stats")
 def stats():
