@@ -5,19 +5,6 @@ import database
 import models
 
 def run(player: str = None, address: str = None, offset: int = None, limit: int = None):
-    """
-    Get the history of a player or server.
-    - **player**: The player name you want to see history for. Incompatible with address.
-    - **address**: The address you want to see history for. Incompatible with player.
-    - **offset**: Offset from where to start the sear
-    \f
-    :param player: Player name to search history for.
-    :param address: Address to search history for.
-    :param offset: Offset from where to start the search.
-    :param limit: Number of results to return.
-    :param X-Auth-Key: The api token to identify yourself or your application.
-    """
-
     if player and address:
         raise HTTPException(status_code=422, detail="You can't use both player and address!")
     elif not player and not address:
