@@ -1,15 +1,15 @@
 from typing import Annotated
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
-from key_check import check
+from utils.key_check import check
 from psycopg.rows import class_row
 from endpoints import stats, history
 
 import endpoints
-import models
-import responses
+import utils.models as models
+import utils.responses as responses
 import subprocess
-import database
+import utils.database as database
 load_dotenv()
 
 def commit_short() -> str:

@@ -1,4 +1,4 @@
-import database
+import utils.database as database
 
 def random():
     conn = database.pool.getconn()

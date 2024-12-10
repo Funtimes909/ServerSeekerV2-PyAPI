@@ -1,7 +1,7 @@
 from psycopg.rows import class_row
 
-import database
-import models
+import utils.database as database
+import utils.models as models
 
 def run():
     conn = database.pool.getconn()
