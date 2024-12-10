@@ -1,6 +1,8 @@
 from typing import Annotated
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
+
+import endpoints.history
 from key_check import check
 from psycopg.rows import class_row
 import models
@@ -57,18 +59,6 @@ def stats():
 
 @app.get("/history", responses=responses.history, operation_id="history")
 def history(player: str = None, address: str = None, offset: int = None, x_auth_key: Annotated[str | None, Header()] = None):
-    """
-    Get the history of a player or server.
-    - **player**: The player name you want to see history for. Incompatible with address.
-    - **address**: The address you want to see history for. Incompatible with player.
-    - **offset**: Offset from where to start the sear
-    \f
-    :param player: Player name to search history for.
-    :param address: Address to search history for.
-    :param offset: Offset from where to start the search.
-    :param X-Auth-Key: The api token to identify yourself or your application.
-    """
-
     if not x_auth_key or x_auth_key not in keys:
         raise HTTPException(status_code=401)
     if player and address:
@@ -76,31 +66,7 @@ def history(player: str = None, address: str = None, offset: int = None, x_auth_
     elif not player and not address:
         raise HTTPException(status_code=400, detail="You have to provide either an address or a player!")
 
-    cur = conn.cursor(row_factory=class_row(models.History))
-
-    if player:
-        option = player
-        query = f"SELECT * FROM playerhistory WHERE playername = %s ORDER BY lastseen DESC LIMIT 100 OFFSET %s"
-    elif address:
-        option = address
-        query = f"SELECT * FROM playerhistory WHERE address = %s ORDER BY lastseen DESC LIMIT 100 OFFSET %s"
-
-    playerhistory = cur.execute(query, (option,offset), prepare=True).fetchall()
-
-    def output(serverid):
-        server = playerhistory[serverid]
-        return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid,
-                "lastseen": server.lastseen}
-
-    length = len(playerhistory)
-    json_output = []
-
-    for i in range(length):
-        if not json_output:
-            json_output = [output(i)]
-        elif json_output:
-            json_output.append(output(i))
-    return json_output
+    return endpoints.history.history(player=player, address=address, offset=offset)
 
 # @app.get("/random")
 # def random():
