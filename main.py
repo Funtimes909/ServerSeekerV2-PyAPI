@@ -75,4 +75,4 @@ def history(player: str = None, address: str = None, offset: int = None, x_auth_
 
 def key_check(x_auth_key: Annotated[str | None, Header()] = None):
     if not x_auth_key or x_auth_key not in keys:
-        raise HTTPException(status_code=401)
+        raise HTTPException(status_code=401, headers={"WWW-Authenticate": "X-Auth-Key"})
