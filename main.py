@@ -51,10 +51,25 @@ keys = check(keyQuery)
 
 @app.get("/stats", responses=responses.stats, operation_id="stats")
 def stats():
+    """
+    Get the stats for ServerSeekerV2
+    """
     return endpoints.stats.run()
 
 @app.get("/history", responses=responses.history, operation_id="history")
 def history(player: str = None, address: str = None, offset: int = None, x_auth_key: Annotated[str | None, Header()] = None):
+    """
+    Get the history of a player or server.
+    - **player**: The player name you want to see history for. Incompatible with address.
+    - **address**: The address you want to see history for. Incompatible with player.
+    - **offset**: Offset from where to start the sear
+    \f
+    :param player: Player name to search history for.
+    :param address: Address to search history for.
+    :param offset: Offset from where to start the search.
+    :param limit: Number of results to return.
+    :param X-Auth-Key: The api token to identify yourself or your application.
+    """
     key_check(x_auth_key)
     return endpoints.history.run(player=player, address=address, offset=offset)
 
