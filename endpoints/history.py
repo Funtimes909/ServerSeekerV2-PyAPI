@@ -22,6 +22,8 @@ def run(player: str = None, address: str = None, offset: int = None, limit: int 
 
     playerhistory = cur.execute(query, (option,limit,offset), prepare=True).fetchall()
 
+    database.pool.putconn(conn = conn)
+
     def output(serverid):
         server = playerhistory[serverid]
         return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid,
