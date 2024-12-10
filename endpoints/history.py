@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 from psycopg.rows import class_row
 
-import database
-import models
+import utils.database as database
+import utils.models as models
 
 def run(player: str = None, address: str = None, offset: int = None, limit: int = None):
     if player and address:
