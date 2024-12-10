@@ -1,10 +1,11 @@
 from typing import Annotated
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
-
-import endpoints.history
 from key_check import check
 from psycopg.rows import class_row
+from endpoints import stats, history
+
+import endpoints
 import models
 import responses
 import subprocess
@@ -50,25 +51,13 @@ keys = check(keyQuery)
 
 @app.get("/stats", responses=responses.stats, operation_id="stats")
 def stats():
-    """
-    Get the stats for ServerSeekerV2
-    """
-    cur = conn.cursor(row_factory=class_row(models.Stats))
-    stats = cur.execute("SELECT COUNT(*) FROM servers").fetchone()
-    return {"servers":f"{stats.count}"}
+    return endpoints.stats.run()
 
 @app.get("/history", responses=responses.history, operation_id="history")
 def history(player: str = None, address: str = None, offset: int = None, x_auth_key: Annotated[str | None, Header()] = None):
+    key_check(x_auth_key)
+    return endpoints.history.run(player=player, address=address, offset=offset)
+
+def key_check(x_auth_key: Annotated[str | None, Header()] = None):
     if not x_auth_key or x_auth_key not in keys:
         raise HTTPException(status_code=401)
-    if player and address:
-        raise HTTPException(status_code=422, detail="You can't use both player and address!")
-    elif not player and not address:
-        raise HTTPException(status_code=400, detail="You have to provide either an address or a player!")
-
-    return endpoints.history.history(player=player, address=address, offset=offset)
-
-# @app.get("/random")
-# def random():
-#     cur = conn.cursor()
-#     random = cur.execute("SELECT * FROM servers LEFT JOIN playerhistory ON servers.address = playerhistory.address AND servers.port = playerhistory.port LEFT JOIN mods ON servers.address = mods.address AND servers.port = mods.port ORDER BY RANDOM() LIMIT 1").fetchone()
