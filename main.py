@@ -1,13 +1,12 @@
 from typing import Annotated
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
-from os import getenv
 from key_check import check
 from psycopg.rows import class_row
 import models
 import responses
 import subprocess
-import psycopg
+import database
 load_dotenv()
 
 def commit_short() -> str:
@@ -34,11 +33,7 @@ app = FastAPI(
     redoc_url=None
 )
 
-try:
-    conn = psycopg.connect(f"dbname={getenv("DBNAME")} user={getenv("USERNAME")} password={getenv("PASSWORD")} host={getenv("HOST")} port={getenv("PORT")}")
-except:
-    raise ConnectionRefusedError("Database can't be reached!")
-
+conn = database.pool.getconn()
 gcur = conn.cursor(row_factory=class_row(models.Key))
 keyTable = ("CREATE TABLE IF NOT EXISTS api_keys ("
             "ID int,"
