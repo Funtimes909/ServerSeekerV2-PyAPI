@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
 from utils.key_check import check
 from psycopg.rows import class_row
-from endpoints import stats, history
 
 import endpoints
 import utils.models as models
@@ -39,7 +38,7 @@ app = FastAPI(
 conn = database.pool.getconn()
 gcur = conn.cursor(row_factory=class_row(models.Key))
 keyTable = ("CREATE TABLE IF NOT EXISTS api_keys ("
-            "ID int,"
+            "ID int NOT NULL UNIQUE,"
             "APIKey varchar(255) NOT NULL UNIQUE,"
             "PRIMARY KEY (ID))")
 
@@ -49,6 +48,8 @@ conn.commit()
 keyQuery = gcur.execute("SELECT APIKey FROM api_keys").fetchall()
 keys = check(keyQuery)
 
+database.pool.putconn(conn = conn)
+
 @app.get("/stats", responses=responses.stats, operation_id="stats")
 def stats():
     """
@@ -57,12 +58,13 @@ def stats():
     return endpoints.stats.run()
 
 @app.get("/history", responses=responses.history, operation_id="history")
-def history(player: str = None, address: str = None, offset: int = None, x_auth_key: Annotated[str | None, Header()] = None):
+def history(player: str = None, address: str = None, offset: int = None, limit: int = 10, x_auth_key: Annotated[str | None, Header()] = None):
     """
     Get the history of a player or server.
     - **player**: The player name you want to see history for. Incompatible with address.
     - **address**: The address you want to see history for. Incompatible with player.
-    - **offset**: Offset from where to start the sear
+    - **offset**: Offset from where to start the search
+    - **limit**: Number of results to return.
     \f
     :param player: Player name to search history for.
     :param address: Address to search history for.
@@ -71,7 +73,7 @@ def history(player: str = None, address: str = None, offset: int = None, x_auth_
     :param X-Auth-Key: The api token to identify yourself or your application.
     """
     key_check(x_auth_key)
-    return endpoints.history.run(player=player, address=address, offset=offset)
+    return endpoints.history.run(player=player, address=address, offset=offset, limit=limit)
 
 def key_check(x_auth_key: Annotated[str | None, Header()] = None):
     if not x_auth_key or x_auth_key not in keys:
