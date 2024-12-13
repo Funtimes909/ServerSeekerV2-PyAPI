@@ -1,6 +1,6 @@
 import utils.database as database
 
-def random():
+def run():
     conn = database.pool.getconn()
     cur = conn.cursor()
     random = cur.execute("SELECT * FROM servers ORDER BY RANDOM() LIMIT 1").fetchone()

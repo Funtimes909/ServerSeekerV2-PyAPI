@@ -4,7 +4,12 @@ from psycopg.rows import class_row
 import utils.database as database
 import utils.models as models
 
-def run(player: str = None, address: str = None, offset: int = None, limit: int = None):
+def run(
+        player: str = None,
+        address: str = None,
+        offset: int = None,
+        limit: int = None
+):
     if player and address:
         raise HTTPException(status_code=422, detail="You can't use both player and address!")
     elif not player and not address:
