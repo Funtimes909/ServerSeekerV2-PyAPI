@@ -105,13 +105,13 @@ def servers(
         protocol=protocol,
     )
 @app.get("/history", responses=responses.history, operation_id="history")
-def history(player: str = None, address: str = None, offset: int = None, limit: int = None, x_auth_key: Annotated[str | None, Header()] = None):
+def history(player: str = None, address: str = None, offset: int = None, limit: int = 10, x_auth_key: Annotated[str | None, Header()] = None):
     """
     Get the history of a player or server.
     - **player**: The player name you want to see history for. Incompatible with address.
     - **address**: The address you want to see history for. Incompatible with player.
-    - **offset**: Offset from where to start the sear
-    - **limit**: Limit the amount of results returned
+    - **offset**: Offset from where to start the search
+    - **limit**: Number of results to return.
     \f
     :param player: Player name to search history for.
     :param address: Address to search history for.
