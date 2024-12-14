@@ -115,6 +115,8 @@ def run(
     print(query)
     print(values)
 
+    # I don't know what I'm looking at so im just gonna stay away from it
+    
     cur = conn.cursor()
     # results = cur.execute(query, (values[0],)).fetchall()
 
