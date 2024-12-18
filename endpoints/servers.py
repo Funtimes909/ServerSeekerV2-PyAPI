@@ -117,6 +117,7 @@ def run(
 
     # Remove trailing " AND " from query string
     query = query[:-5]
+    query += " ORDER BY lastseen DESC"
 
     if offset:
         query += " OFFSET %s "
@@ -125,6 +126,7 @@ def run(
     if limit:
         query += " LIMIT %s"
         values.append(limit)
+
 
     # Execute query
     cur = conn.cursor(row_factory=class_row(models.Server))
