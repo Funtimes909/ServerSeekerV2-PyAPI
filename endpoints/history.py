@@ -20,10 +20,10 @@ def run(
 
     if player:
         option = player
-        query = f"SELECT * FROM playerhistory WHERE playername = %s ORDER BY lastseen DESC LIMIT %s OFFSET %s"
+        query = "SELECT * FROM playerhistory WHERE playername = %s ORDER BY lastseen DESC LIMIT %s OFFSET %s"
     elif address:
         option = address
-        query = f"SELECT * FROM playerhistory WHERE address = %s ORDER BY lastseen DESC LIMIT %s OFFSET %s"
+        query = "SELECT * FROM playerhistory WHERE address = %s ORDER BY lastseen DESC LIMIT %s OFFSET %s"
 
     playerhistory = cur.execute(query, (option,limit,offset), prepare=True).fetchall()
 
