@@ -31,8 +31,12 @@ def run(
 
     def output(serverid):
         server = playerhistory[serverid]
-        return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid,
-                "lastseen": server.lastseen}
+        return {
+            "address": server.address,
+            "playername": server.playername,
+            "playeruuid": server.playeruuid,
+            "lastseen": server.lastseen
+        }
 
     json_output = []
 

@@ -16,9 +16,8 @@ class Server(BaseModel):
     address: str
     port: int
     version: str | None = None
-    protocol: int | None = None
     type: str | None = None
-    icon: str | None = None
+    protocol: int | None = None
     motd: str | None = None
     country: str | None = None
     asn: str | None = None
@@ -32,3 +31,4 @@ class Server(BaseModel):
     prevents_reports: bool | None = None
     maxplayers: int | None = None
     onlineplayers: int | None = None
+    icon: str | None = None

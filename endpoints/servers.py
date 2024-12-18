@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from psycopg.rows import class_row
 
 import utils.database as database
@@ -23,8 +24,7 @@ def run(
         seenafter: int = None,
         seenbefore: int = None,
         onlineplayers: int = None,
-        maxplayers: int = None,
-        player: str = None,
+        maxplayers: int = None
 ):
     conn = database.pool.getconn()
 
@@ -110,15 +110,44 @@ def run(
         query += "maxplayers = %s AND "
         values.append(maxplayers)
 
+    if len(values) == 0:
+        raise HTTPException(status_code=400, detail="You have to provide some search queries!")
 
+    # Remove trailing " AND " from query string
     query = query[:-5]
 
-    print(query)
-    print(values)
+    # Execute query
+    cur = conn.cursor(row_factory=class_row(models.Server))
+    results = cur.execute(query, values).fetchall()
 
-    # I don't know what I'm looking at so im just gonna stay away from it
-    
-    cur = conn.cursor()
-    results = cur.execute(query, (values[0],)).fetchall()
+    def output(serverid):
+        server = results[serverid]
+        return {
+            "address": server.address,
+            "port": server.port,
+            "version": server.version,
+            "software": server.type,
+            "motd": server.motd,
+            "country": server.country,
+            "asn": server.asn,
+            "org": server.org,
+            "hostname": server.reversedns,
+            "firstseen": server.firstseen,
+            "lastseen": server.lastseen,
+            "whitelist": server.whitelist,
+            "cracked": server.cracked,
+            "enforces_secure_chat": server.enforces_secure_chat,
+            "prevents_reports": server.prevents_reports,
+            "maxplayers": server.maxplayers,
+            "onlineplayers": server.onlineplayers,
+            "icon": server.icon
+        }
 
-    print(len(results))
+    json_output = []
+
+    for i in range(len(results)):
+        if not json_output:
+            json_output = [output(i)]
+        elif json_output:
+            json_output.append(output(i))
+    return json_output
