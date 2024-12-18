@@ -24,7 +24,9 @@ def run(
         seenafter: int = None,
         seenbefore: int = None,
         onlineplayers: int = None,
-        maxplayers: int = None
+        maxplayers: int = None,
+        limit: int = None,
+        offset: int = None
 ):
     conn = database.pool.getconn()
 
@@ -115,6 +117,14 @@ def run(
 
     # Remove trailing " AND " from query string
     query = query[:-5]
+
+    if offset:
+        query += " OFFSET %s "
+        values.append(offset)
+
+    if limit:
+        query += " LIMIT %s"
+        values.append(limit)
 
     # Execute query
     cur = conn.cursor(row_factory=class_row(models.Server))

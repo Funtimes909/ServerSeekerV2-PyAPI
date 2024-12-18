@@ -85,7 +85,9 @@ def servers(
         onlineplayers: int = None,
         maxplayers: int = None,
         port: int = None,
-        protocol: int = None
+        protocol: int = None,
+        offset: int = None,
+        limit: int = None
 ):
     return endpoints.servers.run(
         version=version,
@@ -107,7 +109,9 @@ def servers(
         onlineplayers=onlineplayers,
         maxplayers=maxplayers,
         port=port,
-        protocol=protocol
+        protocol=protocol,
+        offset=offset,
+        limit=limit
     )
 @app.get("/history", responses=responses.history, operation_id="history")
 def history(player: str = None, address: str = None, offset: int = None, limit: int = 10, x_auth_key: Annotated[str | None, Header()] = None):
