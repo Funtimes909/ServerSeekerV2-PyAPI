@@ -15,19 +15,20 @@ class Key(BaseModel):
 class Server(BaseModel):
     address: str
     port: int
-    version: str
-    protocol: int
-    icon: str
-    software: str
-    motd: str
-    country: str
-    asn: str
-    org: str
-    firstseen: int
-    lastseen: int
-    hostname: str
-    whitelist: bool
-    cracked: bool
-    enforces_secure_chat: bool
-    prevents_reports: bool
-
+    version: str | None = None
+    protocol: int | None = None
+    type: str | None = None
+    icon: str | None = None
+    motd: str | None = None
+    country: str | None = None
+    asn: str | None = None
+    org: str | None = None
+    reversedns: str | None = None
+    firstseen: int | None = None
+    lastseen: int | None = None
+    whitelist: bool | None = None
+    cracked: bool | None = None
+    enforces_secure_chat: bool | None = None
+    prevents_reports: bool | None = None
+    maxplayers: int | None = None
+    onlineplayers: int | None = None

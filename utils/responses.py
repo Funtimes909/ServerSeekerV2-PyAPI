@@ -8,28 +8,58 @@ servers = {
        "example":
         [
             {
-            "address": "1.1.1.1",
-            "port": 25565,
-            "version": "1.21.1",
-            "protocol": "767",
-            "icon": "data:image/png;base64,iVBORw0KGg... (base64 encoded image)",
-            "software": "JAVA",
-            "motd": "A Minecraft Server",
-            "country": "US",
-            "asn": "AS24940 Hetzner Online GmbH",
-            "org": "Hetzner Online GmbH",
-            "firstseen": 1732377334,
-            "lastseen": 1732377334,
-            "hostname": "mail.funtimes909.xyz",
-            "whitelist": False,
-            "cracked": False,
-            "enforces_secure_chat": False,
-            "prevents_reports": False,
+                "address": "1.1.1.1",
+                "port": 25565,
+                "version": "1.21.1",
+                "protocol": "767",
+                "icon": "data:image/png;base64,iVBORw0KGg... (base64 encoded image)",
+                "software": "JAVA",
+                "motd": "A Minecraft Server",
+                "country": "US",
+                "asn": "AS24940 Hetzner Online GmbH",
+                "org": "Hetzner Online GmbH",
+                "firstseen": 1732377334,
+                "lastseen": 1732377334,
+                "hostname": "mail.funtimes909.xyz",
+                "whitelist": False,
+                "cracked": False,
+                "enforces_secure_chat": False,
+                "prevents_reports": False,
             },
+            {
+                "address": "1.1.1.1",
+                "port": 25565,
+                "version": "1.21.1",
+                "protocol": "767",
+                "icon": "data:image/png;base64,iVBORw0KGg... (base64 encoded image)",
+                "software": "JAVA",
+                "motd": "A Minecraft Server",
+                "country": "US",
+                "asn": "AS24940 Hetzner Online GmbH",
+                "org": "Hetzner Online GmbH",
+                "firstseen": 1732377334,
+                "lastseen": 1732377334,
+                "hostname": "mail.funtimes909.xyz",
+                "whitelist": False,
+                "cracked": False,
+                "enforces_secure_chat": False,
+                "prevents_reports": False,
+            }
         ]
        }
       },
         "description": "Return Servers"
+    },
+}
+
+random = {
+    200:
+    {
+     "content":
+     {
+      "application/json"
+     },
+        "description": "Returns a random server"
     },
 }
 

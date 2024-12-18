@@ -1,15 +1,16 @@
 from typing import Annotated
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
 from utils.key_check import check
 from psycopg.rows import class_row
+from endpoints import servers, stats, random
 
 import endpoints
 import utils.models as models
 import utils.responses as responses
 import subprocess
 import utils.database as database
-load_dotenv()
+# load_dotenv()
 
 def commit_short() -> str:
     return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
@@ -54,6 +55,13 @@ def stats():
     Get the stats for ServerSeekerV2
     """
     return endpoints.stats.run()
+
+@app.get("/random", responses=responses.random, operation_id="stats")
+def random():
+    """
+    Return a random server
+    """
+    return endpoints.random.run()
 
 
 @app.get("/servers", responses=responses.servers, operation_id="servers")

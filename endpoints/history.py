@@ -34,10 +34,9 @@ def run(
         return {"address": server.address, "playername": server.playername, "playeruuid": server.playeruuid,
                 "lastseen": server.lastseen}
 
-    length = len(playerhistory)
     json_output = []
 
-    for i in range(length):
+    for i in range(len(playerhistory)):
         if not json_output:
             json_output = [output(i)]
         elif json_output:

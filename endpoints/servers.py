@@ -48,8 +48,9 @@ def run(
         values.append(software)
 
     if motd:
+        search_pattern = f"%{motd}%"
         query += "motd LIKE %s AND "
-        values.append(motd)
+        values.append(search_pattern)
 
     if country:
         query += "country = %s AND "
@@ -88,7 +89,7 @@ def run(
         values.append(enforces_secure_chat)
 
     if empty:
-        query += "onlineplayers == 0 AND "
+        query += "onlineplayers = 0 AND "
 
     if full:
         query += "onlineplayers >= maxplayers AND "
@@ -118,6 +119,6 @@ def run(
     # I don't know what I'm looking at so im just gonna stay away from it
     
     cur = conn.cursor()
-    # results = cur.execute(query, (values[0],)).fetchall()
+    results = cur.execute(query, (values[0],)).fetchall()
 
-    # print(len(results))
+    print(len(results))
