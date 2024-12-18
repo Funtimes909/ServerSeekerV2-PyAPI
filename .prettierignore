@@ -1,5 +1,7 @@
-env
+**/__pycache__/
+env/
 .env
 .env.example
 LICENSE*
 README*
+requirements

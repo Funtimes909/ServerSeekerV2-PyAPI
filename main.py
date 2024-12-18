@@ -32,7 +32,7 @@ app = FastAPI(
         "name": "GPLv3",
         "url": "https://www.gnu.org/licenses/gpl-3.0.txt",
     },
-    docs_url="/docs",
+    docs_url="/",
     redoc_url=None
 )
 
