@@ -120,6 +120,8 @@ def run(
     cur = conn.cursor(row_factory=class_row(models.Server))
     results = cur.execute(query, values).fetchall()
 
+    database.pool.putconn(conn)
+
     def output(serverid):
         server = results[serverid]
         return {
