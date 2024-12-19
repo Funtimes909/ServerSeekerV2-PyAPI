@@ -77,7 +77,6 @@ def run(
 
     if icon:
         query += "icon IS NOT NULL AND "
-        values.append(icon)
 
     if prevents_reports:
         query += "preventsReports = %s AND "
@@ -132,8 +131,9 @@ def run(
         query += " LIMIT %s"
         values.append(limit)
 
-
     # Execute query
+    print(query)
+    print(values)
     cur = conn.cursor(row_factory=class_row(models.Server))
     results = cur.execute(query, values).fetchall()
 
@@ -145,7 +145,8 @@ def run(
             "address": server.address,
             "port": server.port,
             "version": server.version,
-            "software": server.type,
+            "protocol": server.protocol,
+            "software": server.software,
             "motd": server.motd,
             "country": server.country,
             "asn": server.asn,

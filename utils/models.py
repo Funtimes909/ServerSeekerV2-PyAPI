@@ -16,8 +16,8 @@ class Server(BaseModel):
     address: str
     port: int
     version: str | None = None
-    type: str | None = None
     protocol: int | None = None
+    software: str | None = None
     motd: str | None = None
     country: str | None = None
     asn: str | None = None
