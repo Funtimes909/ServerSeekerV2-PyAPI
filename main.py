@@ -65,6 +65,8 @@ def random():
 
 @app.get("/servers", responses=responses.servers, operation_id="servers")
 def servers(
+        address: str = None,
+        port: int = None,
         version: str = None,
         software: str = None,
         motd: str = None,
@@ -83,12 +85,13 @@ def servers(
         seenbefore: int = None,
         onlineplayers: int = None,
         maxplayers: int = None,
-        port: int = None,
         protocol: int = None,
         offset: int = None,
         limit: int = None
 ):
     return endpoints.servers.run(
+        address=address,
+        port=port,
         version=version,
         software=software,
         motd=motd,
@@ -107,7 +110,6 @@ def servers(
         seenbefore=seenbefore,
         onlineplayers=onlineplayers,
         maxplayers=maxplayers,
-        port=port,
         protocol=protocol,
         offset=offset,
         limit=limit

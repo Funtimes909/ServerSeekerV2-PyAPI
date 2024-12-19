@@ -5,8 +5,9 @@ import utils.database as database
 import utils.models as models
 
 def run(
-        version: str = None,
+        address: str = None,
         port: int = None,
+        version: str = None,
         software: str = None,
         protocol: int = None,
         motd: str = None,
@@ -33,13 +34,17 @@ def run(
     query = "SELECT * FROM servers WHERE "
     values = []
 
-    if version:
-        query += "version = %s AND "
-        values.append(version)
+    if address:
+        query += "address = %s AND "
+        values.append(address)
 
     if port:
         query += "port = %s AND "
         values.append(port)
+
+    if version:
+        query += "version = %s AND "
+        values.append(version)
 
     if protocol:
         query += "protocol = %s AND "
