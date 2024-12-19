@@ -87,8 +87,11 @@ def servers(
         maxplayers: int = None,
         protocol: int = None,
         offset: int = None,
-        limit: int = None
+        limit: int = None,
+        x_auth_key: Annotated[str | None, Header()] = None
 ):
+    if whitelist == False or cracked == True:
+        key_check(x_auth_key)
     return endpoints.servers.run(
         address=address,
         port=port,
@@ -134,4 +137,4 @@ def history(player: str = None, address: str = None, offset: int = None, limit: 
 
 def key_check(x_auth_key: Annotated[str | None, Header()] = None):
     if not x_auth_key or x_auth_key not in keys:
-        raise HTTPException(status_code=401, headers={"WWW-Authenticate": "X-Auth-Key"})
+        raise HTTPException(status_code=401, headers={"WWW-Authenticate": "X-Auth-Key"}, detail="You need a valid API key to run this query!")
