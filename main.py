@@ -3,13 +3,18 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
 from utils.key_check import check
 from psycopg.rows import class_row
-from endpoints import servers, stats, random, history
 
+import os
 import endpoints
 import utils.models as models
 import utils.responses as responses
 import subprocess
 import utils.database as database
+
+if not os.path.exists("./.env"):
+    subprocess.run(["cp", "./.env.example", "./.env"])
+    raise Exception("Credentials not found, created new ones. Please configure the '.env' file to your needs.")
+
 load_dotenv()
 
 def commit_short() -> str:
