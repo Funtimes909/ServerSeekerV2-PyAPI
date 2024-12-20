@@ -78,7 +78,7 @@ You should also deny connections to port 8000 from outside the network.
 The server runs on port 8000.  
 
 ```bash
-docker run --mount type=bind,src=./serverseekerv2.env,dst=/usr/src/app/.env -p 8000:8000 nucceteere/serverseekerv2-pyapi
+docker run --mount type=bind,src=./serverseekerv2.env,dst=/usr/src/app/.env -p 8000:8000 -d nucceteere/serverseekerv2-pyapi
 ```
 
 ## Special Thanks
