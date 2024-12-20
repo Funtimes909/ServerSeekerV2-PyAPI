@@ -10,13 +10,12 @@ def run():
     random = cur.execute("SELECT * FROM servers ORDER BY RANDOM() LIMIT 1").fetchone()
     database.pool.putconn(conn = conn)
 
-
     return {
         "address": random.address,
         "port": random.port,
         "version": random.version,
-        "software": random.type,
-        "icon": random.icon,
+        "protocol": random.protocol,
+        "software": random.software,
         "motd": random.motd,
         "country": random.country,
         "asn": random.asn,
@@ -29,5 +28,6 @@ def run():
         "enforces_secure_chat": random.enforces_secure_chat,
         "prevents_reports": random.prevents_reports,
         "maxplayers": random.maxplayers,
-        "onlineplayers": random.onlineplayers
+        "onlineplayers": random.onlineplayers,
+        "icon": random.icon
     }

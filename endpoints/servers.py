@@ -118,6 +118,8 @@ def run(
 
     if len(values) == 0:
         raise HTTPException(status_code=400, detail="You have to provide some search queries!")
+    if empty and full:
+        raise HTTPException(status_code=422, detail="You can't use both empty and full!")
 
     # Remove trailing " AND " from query string
     query = query[:-5]
@@ -132,8 +134,6 @@ def run(
         values.append(limit)
 
     # Execute query
-    print(query)
-    print(values)
     cur = conn.cursor(row_factory=class_row(models.Server))
     results = cur.execute(query, values).fetchall()
 
