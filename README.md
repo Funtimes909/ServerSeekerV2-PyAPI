@@ -50,22 +50,35 @@ sudo pacman -S git
 
 ## Running
 
-### Dev Server
+### Manual
+
+#### Dev Server
 The Dev Server allows for local, and only local access of the API, running on port 8000.
 
 ```bash
 fastapi dev
 ```
 
-### Production
+#### Production
 
 The production server should not be used alone.  
-When deploying, a reverse proxy with a webserver like Apache, Nginx or Caddy should be used.  
+When deploying, a reverse proxy with a webserver like Apache, Nginx or Caddy (recommended) should be used.  
 You should also deny connections to port 8000 from outside the network.  
 The server runs on port 8000.  
 
 ```bash
 fastapi run
+```
+
+### Docker
+
+Create a file named `serverseekerv2.env` and fill it according to the `.env.example` file on the GitHub Repository.
+When deploying, a reverse proxy with a webserver like Apache, Nginx or Caddy (recommended) should be used.  
+You should also deny connections to port 8000 from outside the network.  
+The server runs on port 8000.  
+
+```bash
+docker run --mount type=bind,src=./serverseekerv2.env,dst=/usr/src/app/.env -p 8000:8000 nucceteere/serverseekerv2-pyapi
 ```
 
 ## Special Thanks
