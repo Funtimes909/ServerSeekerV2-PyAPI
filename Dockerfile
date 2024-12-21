@@ -1,3 +1,4 @@
+# check=error=true
 FROM python:3.12.8
 EXPOSE 8000
 
