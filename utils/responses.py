@@ -33,6 +33,25 @@ servers = {
     },
 }
 
+takedown = {
+    200:
+    {
+     "content":
+     {
+      "application/json":
+      {
+       "example":
+        [
+            {
+                "success": True
+            }
+        ]
+       }
+      },
+        "description": "Remove a server from the database"
+    },
+}
+
 random = {
     200:
     {

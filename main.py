@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
 from utils.key_check import check
 from psycopg.rows import class_row
+from endpoints import stats, servers, history, random, takedown
 
 import os
 import endpoints
@@ -55,11 +56,22 @@ keyQuery = gcur.execute("SELECT APIKey FROM api_keys").fetchall()
 keys = check(keyQuery)
 
 @app.get("/stats", responses=responses.stats, operation_id="stats")
-def stats():
+def stats(address: str):
     """
-    Get the stats for ServerSeekerV2
+    Remove a server from the database
     """
-    return endpoints.stats.run()
+    return endpoints.takedown.run(address=address)
+
+@app.get("/takedown", responses=responses.takedown, operation_id="takedown")
+def takedown(
+        address: str,
+        x_auth_key: Annotated[str | None, Header()] = None
+):
+    """
+    Takedown a server from the database
+    """
+    key_check(x_auth_key)
+    return endpoints.takedown.run(address=address)
 
 @app.get("/random", responses=responses.random, operation_id="random")
 def random():
