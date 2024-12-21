@@ -54,13 +54,14 @@ conn.commit()
 
 keyQuery = gcur.execute("SELECT APIKey FROM api_keys").fetchall()
 keys = check(keyQuery)
+database.pool.putconn(conn)
 
 @app.get("/stats", responses=responses.stats, operation_id="stats")
-def stats(address: str):
+def stats():
     """
-    Remove a server from the database
+    Get the stats for ServerSeekerV2
     """
-    return endpoints.takedown.run(address=address)
+    return endpoints.stats.run()
 
 @app.get("/takedown", responses=responses.takedown, operation_id="takedown")
 def takedown(
