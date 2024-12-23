@@ -128,7 +128,7 @@ def run(
         raise HTTPException(status_code=422, detail="You can't use both empty and full!")
 
     # Remove trailing " AND " from query string
-    query = query[:-5]
+    query = query.removesuffix(' AND ')
     query += " ORDER BY lastseen DESC"
 
     if offset:
