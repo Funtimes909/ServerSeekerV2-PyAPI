@@ -4,10 +4,19 @@ import utils.database as database
 from utils import models
 
 
-def run():
+def run(minimal: bool):
     with database.pool.getconn() as connection:
         with connection.cursor(row_factory=class_row(models.Server)) as cursor:
             random = cursor.execute("SELECT * FROM servers ORDER BY RANDOM() LIMIT 1").fetchone()
+
+    if minimal:
+        return {
+            "address": random.address,
+            "port": random.port,
+            "version": random.version,
+            "country": random.country,
+            "lastseen": random.lastseen
+        }
 
     return {
         "address": random.address,

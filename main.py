@@ -75,11 +75,11 @@ def takedown(
     return endpoints.takedown.run(address=address)
 
 @app.get("/random", responses=responses.random, operation_id="random")
-def random():
+def random(minimal: bool = None):
     """
     Return a random server
     """
-    return endpoints.random.run()
+    return endpoints.random.run(minimal=minimal)
 
 @app.get("/servers", responses=responses.servers, operation_id="servers")
 def servers(
