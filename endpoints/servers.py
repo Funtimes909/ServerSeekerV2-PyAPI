@@ -29,8 +29,6 @@ def run(
         limit: int = None,
         offset: int = None
 ):
-    conn = database.pool.getconn()
-
     query = "SELECT * FROM servers WHERE "
     values = []
 
@@ -134,10 +132,9 @@ def run(
         values.append(limit)
 
     # Execute query
-    cur = conn.cursor(row_factory=class_row(models.Server))
-    results = cur.execute(query, values).fetchall()
-
-    database.pool.putconn(conn)
+    with database.pool.getconn() as connection:
+        with connection.cursor(row_factory=class_row(models.Server)) as cursor:
+            results = cursor.execute(query, values).fetchall()
 
     def output(serverid):
         server = results[serverid]

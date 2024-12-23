@@ -15,9 +15,6 @@ def run(
     elif not player and not address:
         raise HTTPException(status_code=400, detail="You have to provide either an address or a player!")
 
-    conn = database.pool.getconn()
-    cur = conn.cursor(row_factory=class_row(models.History))
-
     if player:
         option = player
         query = "SELECT * FROM playerhistory WHERE playername = %s ORDER BY lastseen DESC LIMIT %s OFFSET %s"
@@ -25,9 +22,9 @@ def run(
         option = address
         query = "SELECT * FROM playerhistory WHERE address = %s ORDER BY lastseen DESC LIMIT %s OFFSET %s"
 
-    playerhistory = cur.execute(query, (option,limit,offset), prepare=True).fetchall()
-
-    database.pool.putconn(conn = conn)
+    with database.pool.getconn() as connection:
+        with connection.cursor(row_factory=class_row(models.History)) as cursor:
+            playerhistory = cursor.execute(query, (option,limit,offset), prepare=True).fetchall()
 
     def output(serverid):
         server = playerhistory[serverid]

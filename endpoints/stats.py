@@ -4,8 +4,7 @@ import utils.database as database
 import utils.models as models
 
 def run():
-    conn = database.pool.getconn()
-    cur = conn.cursor(row_factory=class_row(models.Stats))
-    stats = cur.execute("SELECT COUNT(*) FROM servers").fetchone()
-    database.pool.putconn(conn = conn)
-    return {"servers":f"{stats.count}"}
+    with database.pool.getconn() as connection:
+        with connection.cursor(row_factory=class_row(models.Stats)) as cursor:
+            stats = cursor.execute("SELECT COUNT(*) FROM servers").fetchone()
+            return {"servers":f"{stats.count}"}

@@ -5,10 +5,9 @@ from utils import models
 
 
 def run():
-    conn = database.pool.getconn()
-    cur = conn.cursor(row_factory=class_row(models.Server))
-    random = cur.execute("SELECT * FROM servers ORDER BY RANDOM() LIMIT 1").fetchone()
-    database.pool.putconn(conn = conn)
+    with database.pool.getconn() as connection:
+        with connection.cursor(row_factory=class_row(models.Server)) as cursor:
+            random = cursor.execute("SELECT * FROM servers ORDER BY RANDOM() LIMIT 1").fetchone()
 
     return {
         "address": random.address,
