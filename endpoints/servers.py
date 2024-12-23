@@ -22,6 +22,7 @@ def run(
         enforces_secure_chat: bool = None,
         empty: bool = None,
         full: bool = None,
+        minimal: bool = None,
         seenafter: int = None,
         seenbefore: int = None,
         onlineplayers: int = None,
@@ -99,11 +100,11 @@ def run(
         query += "onlineplayers >= maxplayers AND "
 
     if seenafter:
-        query += "lastseen < = %s AND "
+        query += "lastseen >= %s AND "
         values.append(seenafter)
 
     if seenbefore:
-        query += "seenbefore = %s AND "
+        query += "lastseen <= %s AND "
         values.append(seenbefore)
 
     if onlineplayers:
@@ -138,6 +139,15 @@ def run(
 
     def output(serverid):
         server = results[serverid]
+        if minimal:
+            return {
+                "address": server.address,
+                "port": server.port,
+                "version": server.version,
+                "country": server.country,
+                "lastseen": server.lastseen
+            }
+
         return {
             "address": server.address,
             "port": server.port,
