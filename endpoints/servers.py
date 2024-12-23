@@ -30,7 +30,8 @@ def run(
         limit: int = None,
         offset: int = None
 ):
-
+    conn = database.pool.getconn()
+    
     if minimal:
         query = "SELECT address, port, version, country, lastseen FROM servers WHERE "
     else:
@@ -139,9 +140,10 @@ def run(
         values.append(limit)
 
     # Execute query
-    with database.pool.getconn() as connection:
-        with connection.cursor(row_factory=class_row(models.Server)) as cursor:
-            results = cursor.execute(query, values).fetchall()
+    cur = conn.cursor(row_factory=class_row(models.Server))
+    results = cur.execute(query, values).fetchall()
+
+    database.pool.putconn(conn)
 
     def output(serverid):
         server = results[serverid]
