@@ -30,7 +30,12 @@ def run(
         limit: int = None,
         offset: int = None
 ):
-    query = "SELECT * FROM servers WHERE "
+
+    if minimal:
+        query = "SELECT address, port, version, country, lastseen FROM servers WHERE "
+    else:
+        query = "SELECT * FROM servers WHERE "
+
     values = []
 
     if address:
@@ -115,7 +120,8 @@ def run(
         query += "maxplayers = %s AND "
         values.append(maxplayers)
 
-    if len(values) == 0:
+    # If query hasn't been modified, error
+    if len(query) <= 28:
         raise HTTPException(status_code=400, detail="You have to provide some search queries!")
     if empty and full:
         raise HTTPException(status_code=422, detail="You can't use both empty and full!")
