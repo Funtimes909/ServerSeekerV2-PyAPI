@@ -109,8 +109,9 @@ def servers(
         limit: int = None,
         x_auth_key: Annotated[str | None, Header()] = None
 ):
-    if whitelist == False or cracked == True:
+    if whitelist is not None or cracked is not None:
         key_check(x_auth_key)
+
     return endpoints.servers.run(
         address=address,
         port=port,

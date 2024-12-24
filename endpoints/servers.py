@@ -1,3 +1,5 @@
+from _ast import arg
+
 from fastapi import HTTPException
 from psycopg.rows import class_row
 
@@ -30,14 +32,19 @@ def run(
         limit: int = None,
         offset: int = None
 ):
-    conn = database.pool.getconn()
-    
-    if minimal:
-        query = "SELECT address, port, version, country, lastseen FROM servers WHERE "
-    else:
-        query = "SELECT * FROM servers WHERE "
 
+    if all(arg is None for arg in [address, port, version, software, protocol, motd, country, asn, org, hostname, icon, prevents_reports, whitelist, cracked, enforces_secure_chat, empty, full, minimal, seenafter, seenbefore, onlineplayers, maxplayers]):
+        raise HTTPException(status_code=400, detail="You have to provide some search queries!")
+
+    if empty is not None and full is not None:
+        raise HTTPException(status_code=422, detail="You can't use both empty and full!")
+
+    conn = database.pool.getconn()
+    query = "SELECT * FROM servers WHERE "
     values = []
+
+    if minimal is not None and minimal:
+        query = "SELECT address, port, version, country, lastseen FROM servers WHERE "
 
     if address:
         query += "address = %s AND "
@@ -80,30 +87,39 @@ def run(
         query += "reversedns = %s AND "
         values.append(hostname)
 
-    if icon:
-        query += "icon IS NOT NULL AND "
+    if icon is not None:
+        if icon:
+            query += "icon IS NOT NULL AND "
+        else:
+            query += "icon IS NULL AND "
 
-    if prevents_reports:
+    if prevents_reports is not None:
         query += "preventsReports = %s AND "
         values.append(prevents_reports)
 
-    if whitelist:
+    if whitelist is not None:
         query += "whitelist = %s AND "
         values.append(whitelist)
 
-    if cracked:
+    if cracked is not None:
         query += "cracked = %s AND "
         values.append(cracked)
 
-    if enforces_secure_chat:
+    if enforces_secure_chat is not None:
         query += "enforcesSecureChat = %s AND "
         values.append(enforces_secure_chat)
 
-    if empty:
-        query += "onlineplayers = 0 AND "
+    if empty is not None:
+        if empty:
+            query += "onlineplayers = 0 AND "
+        else:
+            query += "onlineplayers > 0 AND "
 
-    if full:
-        query += "onlineplayers >= maxplayers AND "
+    if full is not None:
+        if full:
+            query += "onlineplayers >= maxplayers AND "
+        else:
+            query += "onlineplayers < maxplayers AND "
 
     if seenafter:
         query += "lastseen >= %s AND "
@@ -120,12 +136,6 @@ def run(
     if maxplayers:
         query += "maxplayers = %s AND "
         values.append(maxplayers)
-
-    # If query hasn't been modified, error
-    if len(query) <= 28:
-        raise HTTPException(status_code=400, detail="You have to provide some search queries!")
-    if empty and full:
-        raise HTTPException(status_code=422, detail="You can't use both empty and full!")
 
     query = query.removesuffix(' AND ')
     query += " ORDER BY lastseen DESC"
@@ -146,7 +156,7 @@ def run(
 
     def output(serverid):
         server = results[serverid]
-        if minimal:
+        if minimal is not None and minimal:
             return {
                 "address": server.address,
                 "port": server.port,
@@ -154,28 +164,28 @@ def run(
                 "country": server.country,
                 "lastseen": server.lastseen
             }
-
-        return {
-            "address": server.address,
-            "port": server.port,
-            "version": server.version,
-            "protocol": server.protocol,
-            "software": server.software,
-            "motd": server.motd,
-            "country": server.country,
-            "asn": server.asn,
-            "org": server.org,
-            "hostname": server.reversedns,
-            "firstseen": server.firstseen,
-            "lastseen": server.lastseen,
-            "whitelist": server.whitelist,
-            "cracked": server.cracked,
-            "enforces_secure_chat": server.enforces_secure_chat,
-            "prevents_reports": server.prevents_reports,
-            "maxplayers": server.maxplayers,
-            "onlineplayers": server.onlineplayers,
-            "icon": server.icon
-        }
+        else:
+            return {
+                "address": server.address,
+                "port": server.port,
+                "version": server.version,
+                "protocol": server.protocol,
+                "software": server.software,
+                "motd": server.motd,
+                "country": server.country,
+                "asn": server.asn,
+                "org": server.org,
+                "hostname": server.reversedns,
+                "firstseen": server.firstseen,
+                "lastseen": server.lastseen,
+                "whitelist": server.whitelist,
+                "cracked": server.cracked,
+                "enforces_secure_chat": server.enforces_secure_chat,
+                "prevents_reports": server.prevents_reports,
+                "maxplayers": server.maxplayers,
+                "onlineplayers": server.onlineplayers,
+                "icon": server.icon
+            }
 
     json_output = []
 
