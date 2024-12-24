@@ -66,10 +66,10 @@ def run(
         query += "type = %s AND "
         values.append(software)
 
-    if motd:
-        search_pattern = f"%{motd}%"
-        query += "motd LIKE %s AND "
-        values.append(search_pattern)
+    # if motd:
+    #     search_pattern = f"%{motd}%"
+    #     query += "motd LIKE %s AND "
+    #     values.append(search_pattern)
 
     if country:
         query += "country = %s AND "
