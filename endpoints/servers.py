@@ -145,8 +145,13 @@ def run(
         values.append(offset)
 
     if limit:
-        query += " LIMIT %s"
-        values.append(limit)
+        if limit > 50:
+            raise HTTPException(status_code=413, detail="Limit is too high!")
+        else:
+            query += " LIMIT %s"
+            values.append(limit)
+    else:
+        query += " LIMIT 5"
 
     # Execute query
     cur = conn.cursor(row_factory=class_row(models.Server))
