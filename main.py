@@ -1,6 +1,6 @@
 from typing import Annotated
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Header
+from fastapi import FastAPI, HTTPException, Header, Response
 from utils.key_check import check
 from psycopg.rows import class_row
 from endpoints import stats, servers, history, random, takedown
@@ -155,6 +155,26 @@ def history(player: str = None, address: str = None, offset: int = None, limit: 
     """
     key_check(x_auth_key)
     return endpoints.history.run(player=player, address=address, offset=offset, limit=limit)
+
+@app.get("/security", operation_id="security")
+@app.get("/security.txt", operation_id="security.txt")
+@app.get("/.well-known/security", operation_id="well-known-security")
+@app.get("/.well-known/security.txt", operation_id="well-known-security.txt")
+def security():
+    """
+    Get the stats for ServerSeekerV2
+    """
+    data = """Contact: mailto:ruzgar@nucceteere.xyz
+Contact: https://funtimes909.xyz
+Expires: 2026-12-31T20:59:00.000Z
+Encryption: https://funtimes909.xyz/Amy_contact@funtimes909.xyz-0xEEDE973B0F0B1B8A-pub.asc
+Preferred-Languages: en, tr 
+Canonical: https://api.funtimes909.xyz/security
+Canonical: https://api.funtimes909.xyz/security.txt 
+Canonical: https://api.funtimes909.xyz/.well-known/security 
+Canonical: https://api.funtimes909.xyz/.well-known/security.txt 
+Policy: https://github.com/Funtimes909/ServerSeekerV2-PyAPI/blob/main/SECURITY.md"""
+    return Response(content=data, media_type="text/plain")
 
 def key_check(x_auth_key: Annotated[str | None, Header()] = None):
     if not x_auth_key or x_auth_key not in keys:
