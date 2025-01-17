@@ -6,3 +6,4 @@ def run(address: str):
     cursor.execute("DELETE FROM servers WHERE address = %s", (address,), prepare=True)
     conn.commit()
     database.pool.putconn(conn)
+    return {"success": True}

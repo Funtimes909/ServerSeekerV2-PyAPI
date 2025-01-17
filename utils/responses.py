@@ -41,11 +41,9 @@ takedown = {
       "application/json":
       {
        "example":
-        [
-            {
-                "success": True
-            }
-        ]
+        {
+            "success": True
+        }
        }
       },
         "description": "Remove a server from the database"
@@ -125,6 +123,21 @@ history = {
       }
      }
      , "description": "Unprocessable Content"
+    },
+
+    403:
+    {
+     "content":
+     {
+      "application/json":
+      {
+        "example":
+       {
+        "detail": "Forbidden"
+       }
+      }
+     }
+     , "description": "Forbidden"
     },
 
     401:
