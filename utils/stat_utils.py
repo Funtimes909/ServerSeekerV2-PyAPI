@@ -17,6 +17,7 @@ class stats():
         paper = cur.execute("SELECT COUNT(*) FROM servers WHERE type = 'PAPER'").fetchone()
         purpur = cur.execute("SELECT COUNT(*) FROM servers WHERE type = 'PURPUR'").fetchone()
         pufferfish = cur.execute("SELECT COUNT(*) FROM servers WHERE type = 'PUFFERFISH'").fetchone()
+        leaves = cur.execute("SELECT COUNT(*) FROM servers WHERE type = 'LEAVES'").fetchone()
     class multi_threaded():
         folia = cur.execute("SELECT COUNT(*) FROM servers WHERE type = 'FOLIA'").fetchone()
         lumina = cur.execute("SELECT COUNT(*) FROM servers WHERE type = 'LUMINA'").fetchone()

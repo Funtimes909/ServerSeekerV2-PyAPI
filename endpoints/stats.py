@@ -13,7 +13,8 @@ def run():
             "spigot": stats.plugin.spigot.count,
             "paper": stats.plugin.paper.count,
             "purpur": stats.plugin.purpur.count,
-            "pufferfish": stats.plugin.pufferfish.count
+            "pufferfish": stats.plugin.pufferfish.count,
+            "leaves": stats.plugin.leaves.count
         },
         "multi_threaded": {
             "folia": stats.multi_threaded.folia.count,
