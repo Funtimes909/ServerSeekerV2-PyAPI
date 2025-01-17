@@ -63,7 +63,7 @@ def stats():
     """
     return endpoints.stats.run()
 
-@app.get("/takedown", responses=responses.takedown, operation_id="takedown")
+@app.post("/takedown", responses=responses.takedown, operation_id="takedown")
 def takedown(
         address: str,
         x_auth_key: Annotated[str | None, Header()] = None
@@ -156,10 +156,10 @@ def history(player: str = None, address: str = None, offset: int = None, limit: 
     key_check(x_auth_key)
     return endpoints.history.run(player=player, address=address, offset=offset, limit=limit)
 
-@app.get("/security", operation_id="security")
-@app.get("/security.txt", operation_id="security.txt")
-@app.get("/.well-known/security", operation_id="well-known-security")
-@app.get("/.well-known/security.txt", operation_id="well-known-security.txt")
+@app.get("/security", operation_id="security", include_in_schema=False)
+@app.get("/security.txt", operation_id="security.txt", include_in_schema=False)
+@app.get("/.well-known/security", operation_id="well-known-security", include_in_schema=False)
+@app.get("/.well-known/security.txt", operation_id="well-known-security.txt", include_in_schema=False)
 def security():
     """
     Get the stats for ServerSeekerV2
