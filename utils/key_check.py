@@ -1,7 +1,7 @@
 def check(keys):
     def output(serverId):
         key = keys[serverId]
-        return key.apikey
+        return key.key
     length = len(keys)
     ListOutput = []
     for i in range(length):

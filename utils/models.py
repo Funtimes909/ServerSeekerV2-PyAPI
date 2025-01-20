@@ -10,7 +10,7 @@ class History(BaseModel):
     lastseen: int
 
 class Key(BaseModel):
-    apikey: str
+    key: str
 
 class Server(BaseModel):
     address: str
