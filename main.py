@@ -141,6 +141,7 @@ def servers(
         offset=offset,
         limit=limit
     )
+
 @app.get("/history", responses=responses.history, operation_id="history")
 def history(player: str = None, address: str = None, offset: int = None, limit: int = 10, x_auth_key: Annotated[str | None, Header()] = None):
     """
