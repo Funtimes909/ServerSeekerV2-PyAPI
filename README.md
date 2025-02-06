@@ -1,4 +1,4 @@
-[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Funtimes909/ServerSeekerV2-PyAPI)
+[![Forgejo](https://img.shields.io/badge/forgejo-%23F2712B.svg?style=for-the-badge&logo=forgejo&logoColor=white)](https://git.funtimes909.xyz/ServerSeekerV2/ServerSeekerV2-PyAPI)
 [![Docker](https://img.shields.io/badge/Docker-%232496ED?style=for-the-badge&logo=docker&logoColor=white&labelColor=%232496ED)](https://hub.docker.com/r/nucceteere/serverseekerv2-pyapi)
 [![FastAPI](https://img.shields.io/badge/FastAPI-%23009688?style=for-the-badge&logo=fastapi&logoColor=white&labelColor=%23009688)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%234169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
