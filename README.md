@@ -3,10 +3,10 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-%23009688?style=for-the-badge&logo=fastapi&logoColor=white&labelColor=%23009688)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%234169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Python](https://img.shields.io/badge/Python%203.12-%233776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-![GitHub Last Commit](https://img.shields.io/github/last-commit/Funtimes909/ServerSeekerV2-PyAPI?style=for-the-badge&logo=github)
-![GitHub Commit Activity](https://img.shields.io/github/commit-activity/w/Funtimes909/ServerSeekerV2-PyAPI?style=for-the-badge&logo=github)
+![Forgejo Last Commit](https://img.shields.io/gitea/last-commit/ServerSeekerV2/ServerSeekerV2-PyAPI?gitea_url=https%3A%2F%2Fgit.funtimes909.xyz%2F&style=for-the-badge&logo=forgejo)
+<!-- ![GitHub Commit Activity](https://img.shields.io/github/commit-activity/w/Funtimes909/ServerSeekerV2-PyAPI?style=for-the-badge&logo=github)
 ![Code Size](https://img.shields.io/github/languages/code-size/Funtimes909/ServerSeekerV2-PyAPI?style=for-the-badge&logo=github)
-![Lines of Code](https://img.shields.io/endpoint?style=for-the-badge&logo=github&url=https://ghloc.vercel.app/api/Funtimes909/ServerSeekerV2-PyAPI/badge?filter=.py$&label=lines%20of%20code&color=blue)
+![Lines of Code](https://img.shields.io/endpoint?style=for-the-badge&logo=github&url=https://ghloc.vercel.app/api/Funtimes909/ServerSeekerV2-PyAPI/badge?filter=.py$&label=lines%20of%20code&color=blue) -->
 
 
 # ServerSeekerV2 Python API
